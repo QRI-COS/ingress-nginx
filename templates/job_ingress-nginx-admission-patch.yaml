@@ -1,0 +1,31 @@
+---
+# Source: ingress-nginx/templates/admission-webhooks/job-patch/job-patchWebhook.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{{ .Release.Name }}-admission-patch"
+  annotations:
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+  namespace: {{ .Release.Namespace }}
+spec:
+  template:
+    metadata:
+      name: "{{ .Release.Name }}-admission-patch"
+    spec:
+      containers:
+        - name: patch
+          image: jettech/kube-webhook-certgen:v1.2.0
+          imagePullPolicy:
+          args:
+            - patch
+            - --webhook-name={{ .Release.Name }}-admission
+            - --namespace={{ .Release.Name }}
+            - --patch-mutating=false
+            - --secret-name={{ .Release.Name }}-admission
+            - --patch-failure-policy=Fail
+      restartPolicy: OnFailure
+      serviceAccountName: "{{ .Release.Name }}-admission"
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 2000

@@ -1,0 +1,7 @@
+apiVersion: 3
+name: ingress-nginx
+namespace: ingress-nginx
+version: 1.0.0
+maintainers:
+  - name: Jason Enderle
+    email: jenderle@quantum-intl.com

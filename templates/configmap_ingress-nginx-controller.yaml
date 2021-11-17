@@ -1,0 +1,8 @@
+---
+# Source: ingress-nginx/templates/controller-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "{{ .Release.Name }}-controller"
+  namespace: {{ .Release.Namespace }}
+data:
